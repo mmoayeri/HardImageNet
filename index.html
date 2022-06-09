@@ -1,1 +1,609 @@
-fill in
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Theme Made By www.w3schools.com -->
+  <title>RIVAL10 Dataset</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script src="https://canvasjs.com/assets/script/canvasjs.min.js"> </script>
+  <script src="https://kit.fontawesome.com/9cee455d9d.js" crossorigin="anonymous"></script>  
+  <style>
+  body {
+    font: 400 15px Lato, sans-serif;
+    line-height: 1.8;
+    color: #505050;
+  }
+  h2 {
+    font-size: 24px;
+    text-transform: uppercase;
+    color: #303030;
+    font-weight: 600;
+    margin-bottom: 15px;
+  }
+  h4 {
+    font-size: 19px;
+    line-height: 1.375em;
+    color: #303030;
+    font-weight: 400;
+    margin-bottom: 30px;
+  }
+  .jumbotron {
+    background-color: #1a440d;
+    color: #fff;
+    padding: 30px 25px;
+    font-family: Montserrat, sans-serif;
+  }
+  .container-fluid {
+    padding: 30px 25px;
+  }
+  .bg-grey {
+    background-color: #f6f6f6;
+  }
+  .logo-small {
+    color: #1a440d;
+    font-size: 50px;
+  }
+  .logo {
+    color: #1a440d;
+    font-size: 200px;
+  }
+  .thumbnail {
+    padding: 0 0 15px 0;
+    border: none;
+    border-radius: 0;
+  }
+  .thumbnail img {
+    width: 100%;
+    height: 100%;
+    margin-bottom: 10px;
+  }
+  .carousel-control.right, .carousel-control.left {
+    background-image: none;
+    color: #1a440d;
+  }
+  .carousel-indicators li {
+    border-color: #1a440d;
+  }
+  .carousel-indicators li.active {
+    background-color: #1a440d;
+  }
+  .item h4 {
+    font-size: 19px;
+    line-height: 1.375em;
+    font-weight: 400;
+    font-style: italic;
+    margin: 70px 0;
+  }
+  .item span {
+    font-style: normal;
+  }
+  .panel {
+    border: 1px solid #1a440d;
+    border-radius:0 !important;
+    transition: box-shadow 0.5s;
+  }
+  .panel:hover {
+    box-shadow: 5px 0px 40px rgba(0,0,0, .2);
+  }
+  .panel-footer .btn:hover {
+    border: 1px solid #1a440d;
+    background-color: #fff !important;
+    color: #1a440d;
+  }
+  .panel-heading {
+    color: #fff !important;
+    background-color: #1a440d !important;
+    padding: 25px;
+    border-bottom: 1px solid transparent;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+  }
+  .panel-footer {
+    background-color: white !important;
+  }
+  .panel-footer h3 {
+    font-size: 32px;
+  }
+  .panel-footer h4 {
+    color: #aaa;
+    font-size: 14px;
+  }
+  .panel-footer .btn {
+    margin: 15px 0;
+    background-color: #1a440d;
+    color: #000;
+  }
+  .navbar {
+    margin-bottom: 0;
+    background-color: #1a440d;
+    z-index: 9999;
+    border: 0;
+    font-size: 12px !important;
+    line-height: 1.42857143 !important;
+    letter-spacing: 4px;
+    border-radius: 0;
+    font-family: Montserrat, sans-serif;
+  }
+  .navbar li a, .navbar .navbar-brand {
+    color: #fff !important;
+  }
+  .navbar-nav li a:hover, .navbar-nav li.active a {
+    color: #1a440d !important;
+    background-color: #fff !important;
+  }
+  .navbar-default .navbar-toggle {
+    border-color: transparent;
+    color: #fff !important;
+  }
+  footer .glyphicon {
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: #1a440d;
+  }
+  .slideanim {visibility:hidden;}
+  .slide {
+    animation-name: slide;
+    -webkit-animation-name: slide;
+    animation-duration: 1s;
+    -webkit-animation-duration: 1s;
+    visibility: visible;
+  }
+  @keyframes slide {
+    0% {
+      opacity: 0;
+      transform: translateY(70%);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0%);
+    }
+  }
+  @-webkit-keyframes slide {
+    0% {
+      opacity: 0;
+      -webkit-transform: translateY(70%);
+    }
+    100% {
+      opacity: 1;
+      -webkit-transform: translateY(0%);
+    }
+  }
+  @media screen and (max-width: 768px) {
+    .col-sm-4 {
+      text-align: center;
+      margin: 20px 0;
+    }
+    .btn-lg {
+      width: 100%;
+      margin-bottom: 30px;
+    }
+  }
+  @media screen and (max-width: 480px) {
+    .logo {
+      font-size: 150px;
+    }
+  }
+
+  * {
+    box-sizing: border-box;
+    }
+
+    /* Position the image container (needed to position the left and right arrows) */
+    .container {
+    position: relative;
+    }
+
+    /* Hide the images by default */
+    .mySlides {
+    display: none;
+    width:90%;  
+    margin-left: auto;
+    margin-right: auto;
+    }
+    .mySlides2 {
+    display: none;
+    width:90%;  
+    margin-left: auto;
+    margin-right: auto;
+    }
+
+    /* Add a pointer when hovering over the thumbnail images */
+    .cursor {
+    cursor: pointer;
+    }
+
+    /* Next & previous buttons */
+    .prev,
+    .next, .prev2, .next2 {
+    cursor: pointer;
+    /* position: absolute; */
+    background-color:#000;
+    margin-left: auto;
+    margin-right: auto;
+    top: 40%;
+    width: auto;
+    padding: 8px;
+    margin-top: -50px;
+    color: white;
+    font-weight: bold;
+    font-size: 12px;
+    border-radius: 3px 0 0 3px;
+    /* border-radius: 0 3px 3px 0; */
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  
+  /* Position the "next button" to the right */
+  .next, .next2 {
+    right: 0;
+    border-radius: 0 3px 3px 0;
+    /* border-radius: 3px 0 0 3px; */
+    }
+
+    /* On hover, add a black background color with a little bit see-through */
+    .prev:hover,
+    .next:hover, .prev2:hover, .next2:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+    }
+
+    /* Number text (1/3 etc) */
+    .numbertext {
+    color: #f2f2f2;
+    font-size: 12px;
+    padding: 8px 12px;
+    position: absolute;
+    top: 0;
+    }
+
+    /* Container for image text */
+    .caption-container {
+    text-align: center;
+    background-color: #222;
+    padding: 2px 16px;
+    color: white;
+    }
+
+    .row:after {
+    content: "";
+    display: table;
+    clear: both;
+    }
+
+    /* seven columns side by side */
+    .column {
+    float: left;
+    width: 14.22%;
+    }
+    /* four columns side by side */
+    .column2 {
+    float: left;
+    width: 24%;
+    }
+
+    /* Add a transparency effect for thumnbail images */
+    .demo, .demo2 {
+    opacity: 0.6;
+    }
+
+    .active,
+    .demo:hover, .demo2:hover {
+    opacity: 1;
+    }
+  </style>
+  <script>
+    var slideIndex = 1;
+    // showSlides(slideIndex);
+
+    // Next/previous controls
+    function plusSlides(n) {
+    showSlides(slideIndex += n);
+    }
+
+    // Thumbnail image controls
+    function currentSlide(n) {
+    showSlides(slideIndex = n);
+    }
+
+    function showSlides(n) {
+    var i;
+    var slides = document.getElementsByClassName("mySlides");
+    var dots = document.getElementsByClassName("demo");
+    var captionText = document.getElementById("caption");
+    if (n > slides.length) {slideIndex = 1}
+    if (n < 1) {slideIndex = slides.length}
+    for (i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none";
+    }
+    for (i = 0; i < dots.length; i++) {
+        dots[i].className = dots[i].className.replace(" active", "");
+    }
+    slides[slideIndex-1].style.display = "block";
+    dots[slideIndex-1].className += " active";
+    // captionText.innerHTML = dots[slideIndex-1].alt;
+    }
+
+    var slideIndex2 = 1;
+    // showSlides2(slideIndex2);
+
+    // Next/previous controls
+    function plusSlides2(n) {
+    showSlides2(slideIndex2 += n);
+    }
+
+    // Thumbnail image controls
+    function currentSlide2(n) {
+    showSlides2(slideIndex2 = n);
+    }
+
+    function showSlides2(n) {
+    var i;
+    var slides = document.getElementsByClassName("mySlides2");
+    var dots = document.getElementsByClassName("demo2");
+    var captionText = document.getElementById("caption2");
+    if (n > slides.length) {slideIndex2 = 1}
+    if (n < 1) {slideIndex2 = slides.length}
+    for (i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none";
+    }
+    for (i = 0; i < dots.length; i++) {
+        dots[i].className = dots[i].className.replace(" active", "");
+    }
+    slides[slideIndex2-1].style.display = "block";
+    dots[slideIndex2-1].className += " active";
+    // captionText.innerHTML = dots[slideIndex-1].alt;
+    }
+  </script>
+</head>
+<body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="60">
+
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">HOME</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav navbar-right">
+        <li id="evalpage"><a href="#download">DOWNLOAD</a></li>
+        <li id="trainpage"><a href="#cite">CITE</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+   
+<div class="jumbotron text-center" id="home">
+    <h1>Hard ImageNet Dataset</h1>
+    <p> Object segmentations and image rankings for 15 ImageNet synsets with strong spurious cues</p>
+</div>
+
+<div id="classes" class="container-fluid row">
+    <div class="col-sm-8 col-sm-offset-2">
+      <h2 class="text-center">Classes</h2>
+      <ul class="lead text-center">
+      <!-- <h3 class="text-center">RIVAL10 adopts CIFAR10 classes <i>via Imagenet</i>. </h3> -->
+      RIVAL10 adopts CIFAR10 classes <i>via Imagenet</i>.
+          <center><img src="./webpage_imgs/classes.png" width="85%"></center>
+          That is, two Imagenet synsets are combined for each RIVAL10 class, as visualized above.
+    </ul>
+    </div>
+  </div>
+
+<div id="analysis" class = "container-fluid row">
+    <div class="col-sm-8 col-sm-offset-2">
+        <h2 class="text-center">Analysis</h2>
+        <ul class="lead text-center">
+          RIVAL10 has many uses, from guiding models to learn from attributes to assessing model sensitivities to various regions. The latter was the focus of RIVAL10's original paper. Namely, noise and saliency analyses were used to assess background sensitivity and find spurious features. Below, we show examples where models appear more sensitive to backgrounds.
+      </ul>
+        <div class="container-fluid text-center" onload="currentSlide(1);">
+
+            <!-- Full-width images with number text -->
+            <div class="mySlides">
+              <div class="numbertext">1 / 7</div>
+                <img src="webpage_imgs/deit_small_60_equine.png" style="width:75%">
+            </div>
+
+            <div class="mySlides">
+              <div class="numbertext">2 / 7</div>
+                <img src="webpage_imgs/deit_tiny_car.png" style="width:75%">
+            </div>
+          
+            <div class="mySlides">
+              <div class="numbertext">3 / 7</div>
+                <img src="webpage_imgs/rr50_eps30_car.png" style="width:75%">
+            </div>
+          
+            <div class="mySlides">
+              <div class="numbertext">4 / 7</div>
+                <img src="webpage_imgs/simclr_30_frog.png" style="width:75%">
+            </div>
+          
+            <div class="mySlides">
+              <div class="numbertext">5 / 7</div>
+                <img src="webpage_imgs/deit_tiny_ship.png" style="width:75%">
+            </div>
+          
+            <div class="mySlides">
+              <div class="numbertext">6 / 7</div>
+                <img src="webpage_imgs/deitsmall_eps30_bird.png" style="width:75%">
+            </div>
+          
+            <div class="mySlides">
+              <div class="numbertext">7 / 7</div>
+                <img src="webpage_imgs/deit_small_30_plane.png" style="width:75%">
+            </div>
+          
+            <!-- Next and previous buttons -->
+            <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+            <a class="next" onclick="plusSlides(1)">&#10095;</a>
+          
+            <!-- Image text -->
+            <div class="caption-container">
+              <p>Examples of highly accurate models showing greater sensitivity to backgrounds than foregrounds.</p>
+            </div>
+          
+            <!-- Thumbnail images -->
+            <div class="row">
+              <div class="column">
+                <img class="demo cursor" src="webpage_imgs/deit_small_60_equine.png" style="width:75%" onclick="currentSlide(1)" alt="The Woods">
+              </div>
+              <div class="column">
+                <img class="demo cursor" src="webpage_imgs/deit_tiny_car.png" style="width:75%" onclick="currentSlide(2)" alt="Cinque Terre">
+              </div>
+              <div class="column">
+                <img class="demo cursor" src="webpage_imgs/rr50_eps30_car.png" style="width:75%" onclick="currentSlide(3)" alt="Mountains and fjords">
+              </div>
+              <div class="column">
+                <img class="demo cursor" src="webpage_imgs/simclr_30_frog.png" style="width:75%" onclick="currentSlide(4)" alt="Northern Lights">
+              </div>
+              <div class="column">
+                <img class="demo cursor" src="webpage_imgs/deit_tiny_ship.png" style="width:75%" onclick="currentSlide(5)" alt="Nature and sunrise">
+              </div>
+              <div class="column">
+                <img class="demo cursor" src="webpage_imgs/deitsmall_eps30_bird.png" style="width:75%" onclick="currentSlide(6)" alt="Snowy Mountains">
+              </div>
+              <div class="column">
+                <img class="demo cursor" src="webpage_imgs/deit_small_30_plane.png" style="width:75%" onclick="currentSlide(7)" alt="Snowy Mountains">
+              </div>
+            </div>
+          </div>
+
+    <br><br>
+    <div class="container-fluid text-center" onload="currentSlide2(1);">
+
+      <!-- Full-width images with number text -->
+      <div class="mySlides2">
+        <div class="numbertext">1 / 4</div>
+          <img src="webpage_imgs/other.png" style="width:75%">
+      </div>
+
+      <div class="mySlides2">
+        <div class="numbertext">2 / 4</div>
+          <img src="webpage_imgs/mistakes.png" style="width:75%">
+      </div>
+    
+      <div class="mySlides2">
+        <div class="numbertext">3 / 4</div>
+          <img src="webpage_imgs/rr50.png" style="width:75%">
+      </div>
+    
+      <div class="mySlides2">
+        <div class="numbertext">4 / 4</div>
+          <img src="webpage_imgs/rr50_2.png" style="width:75%">
+      </div>
+    
+      <!-- Next and previous buttons -->
+      <a class="prev2" onclick="plusSlides2(-1)">&#10094;</a>
+      <a class="next2" onclick="plusSlides2(1)">&#10095;</a>
+    
+      <!-- Image text -->
+      <div class="caption-container">
+        <p>Spurious features discovered by finding misalignments of saliencies with RIVAL10 object masks.</p>
+      </div>
+    
+      <!-- Thumbnail images -->
+      <div class="row">
+        <div class="column2">
+          <img class="demo2 cursor" src="webpage_imgs/other.png" style="width:75%" onclick="currentSlide2(1)" alt="The Woods">
+        </div>
+        <div class="column2">
+          <img class="demo2 cursor" src="webpage_imgs/mistakes.png" style="width:75%" onclick="currentSlide2(2)" alt="Cinque Terre">
+        </div>
+        <div class="column2">
+          <img class="demo2 cursor" src="webpage_imgs/rr50.png" style="width:75%" onclick="currentSlide2(3)" alt="Mountains and fjords">
+        </div>
+        <div class="column2">
+          <img class="demo2 cursor" src="webpage_imgs/rr50_2.png" style="width:75%" onclick="currentSlide2(4)" alt="Northern Lights">
+        </div>
+      </div>
+    </div>
+    </div>
+</div>
+
+<div id="download" class = "container-fluid row bg-grey">
+    <div class="col-sm-8 col-sm-offset-2">
+        <h2 class="text-center">Download</h2><br>
+        <ul class='lead'>
+            <li style='margin: 0;padding: 36px 0 36px 84px;list-style: none;background-image: url("github_logo.png");background-repeat: no-repeat;background-position: left center;background-size: 60px;'> 
+              <h3 style='text-align:left'>From Github (recommended)</h3>
+    
+                    Follow the setup instructions in <a href='https://github.com/singlasahil14/salient_imagenet'>this repository</a> to download the data and other utilities. 
+                    <br>
+              This repo also contains <b>custom data loaders</b> to easily access RIVAL10's rich annotations.
+              </li>
+            <li style='margin: 0;padding: 36px 0 36px 84px;list-style: none;background-image: url("download_logo.png");background-repeat: no-repeat;background-position: left center;background-size: 60px;'>
+              <h3 style='text-align:left'>Directly From Box</h3>
+                    Download the dataset directly from <a href='https://umd.box.com/s/eyji8leh2lemhbxovgny9ywc9is53ibr'>box</a>, or use the following code to download the data on remote server:
+                    <pre><code>curl -L 'https://app.box.com/index.php?rm=box_download_shared_file&shared_name=xvhkkxbc1fg8u8ypxaor25kdnu86pjjn&file_id=f_935345018217' -o rival10.zip
+    
+unzip rival10.zip</code></pre>
+              </li>
+            <br>            
+        </ul>
+    </div>
+</div>
+
+<div id="cite" class = "container-fluid row">
+    <div class="col-sm-8 col-sm-offset-2">
+        <h2 class="text-center">Citation</h2>
+        <!-- <h2 class="text-center">Paper</h2><br>
+                <a href="https://openaccess.thecvf.com/content/CVPR2021/html/Pham_Learning_To_Predict_Visual_Attributes_in_the_Wild_CVPR_2021_paper.html" target="_blank">
+        <img src="static/vaw_paper_screencap.png" class="center-block img-responsive" alt="VAW"> </a>
+<br> -->
+      <p class="lead"> 
+        Please cite <a href="https://arxiv.org/abs/2201.10766">our CVPR paper</a> if RIVAL10 is of use to you. 
+    </p>
+<pre><code>
+@inproceedings{moayeri2022comprehensive,
+    title     = {A Comprehensive Study of Image Classification Model Sensitivity to
+                 Foregrounds, Backgrounds, and Visual Attributes},
+    author    = {Moayeri, Mazda and Pope, Phillip and Balaji, Yogesh and Feizi, Soheil},
+    booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
+    month     = {June},
+    year      = {2022},
+    }
+</code></pre>
+    </div>
+</div>
+
+
+<div id="contact">
+    <div class="container-fluid text-center row bg-grey">
+    <h2 class="text-center">Contact</h2><br>
+
+    <div class="row">
+    <div class="col-sm-8 col-sm-offset-2">
+        <p class="lead">Please feel free to contact us for any questions or comments regarding either our paper or the dataset. Our emails are found in the paper PDF.</p>
+    </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-2 col-sm-offset-2 text-center">
+        <a href="https://sites.google.com/umd.edu/mazdamoayeri" target="_blank"><img src="webpage_imgs/mazda.jpeg" class="img-circle center-block " alt="Mazda Moayeri Headshot" height="200"> <h3>Mazda Moayeri</h3> </a>
+    </div>
+        <div class="col-sm-2 text-center">
+        <a href="http://www.cs.umd.edu/~sfeizi/" target="_blank"><img src="https://pbs.twimg.com/profile_images/1330915304512294917/IDavUi_P_400x400.jpg" class="img-circle center-block " alt="Soheil Feizi Headshot" height="200"> <h3>Soheil Feizi</h3> </a>
+    </div>
+
+    </div>
+        </div>
+        </div>
+   
+       <div id="footer">
+       </div>
+   
+
+
+ </body>
+</html>
