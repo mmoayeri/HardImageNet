@@ -277,15 +277,15 @@
     clear: both;
     }
 
-    /* seven columns side by side */
+    /* three columns side by side */
     .column {
     float: left;
-    width: 14.22%;
+    width: 33%;
     }
-    /* four columns side by side */
+    /* two columns side by side */
     .column2 {
     float: left;
-    width: 24%;
+    width: 49%;
     }
 
     /* Add a transparency effect for thumnbail images */
@@ -400,7 +400,7 @@
     </div>
   </div>
 
-<div id="benchmark" class = "container-fluid row">
+<div id="benchmark" class = "container-fluid row  bg-grey">
     <div class="col-sm-8 col-sm-offset-2">
         <h2 class="text-center">BENCHMARK</h2>
         <ul class="lead text-center">
@@ -430,18 +430,18 @@
     
       <!-- Image text -->
       <div class="caption-container">
-        <p>Our benchmark includes ablation, noise-based, and saliency analyses to assess whether models predict because of the object region, or if they rely instead on spurious features.</p>
+        <p>Our benchmark includes ablation, noise-based, and saliency analyses to assess whether models predict because of the object region, or if they rely instead on spurious features. Compared to more typical data (as represented by RIVAL10), Hard ImageNet classification induces far greater spurious feature reliance.</p>
       </div>
     
       <!-- Thumbnail images -->
       <div class="row">
-        <div class="column2">
+        <div class="column">
           <img class="demo2 cursor" src="webpage_imgs/ablation.png" style="width:75%" onclick="currentSlide2(1)" alt="Ablation">
         </div>
-        <div class="column2">
+        <div class="column">
           <img class="demo2 cursor" src="webpage_imgs/rfs.png" style="width:75%" onclick="currentSlide2(2)" alt="Relative Foreground Sensitivity">
         </div>
-        <div class="column2">
+        <div class="column">
           <img class="demo2 cursor" src="webpage_imgs/saliency.png" style="width:75%" onclick="currentSlide2(3)" alt="Saliency Alignment">
         </div>
       </div>
@@ -449,7 +449,7 @@
     </div>
 </div>
 
-<div id="download" class = "container-fluid row bg-grey">
+<div id="download" class = "container-fluid row">
     <div class="col-sm-8 col-sm-offset-2">
         <h2 class="text-center">Download</h2><br>
         <ul class='lead'>
@@ -470,7 +470,7 @@ unzip hardImageNet.zip</code></pre>
     </div>
 </div>
 
-<div id="cite" class = "container-fluid row">
+<div id="cite" class = "container-fluid row row bg-grey">
     <div class="col-sm-8 col-sm-offset-2">
         <h2 class="text-center">Citation</h2>
         <!-- <h2 class="text-center">Paper</h2><br>
@@ -494,7 +494,7 @@ unzip hardImageNet.zip</code></pre>
 
 
 <div id="contact">
-    <div class="container-fluid text-center row bg-grey">
+    <div class="container-fluid text-center">
     <h2 class="text-center">Contact</h2><br>
 
     <div class="row">
