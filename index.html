@@ -387,6 +387,7 @@
 <div class="jumbotron text-center" id="home">
     <h1>Hard ImageNet Dataset</h1>
     <p>Object segmentations and image rankings for 15 ImageNet synsets with strong spurious cues</p>
+    <p>19k Training Images &#9830; 750 quintuply validated Test Images &#9830; Extensive Evaluation Suite </p>
 </div>
 
 <div id="classes" class="container-fluid row">
@@ -396,7 +397,9 @@
       <!-- <h3 class="text-center">RIVAL10 adopts CIFAR10 classes <i>via Imagenet</i>. </h3> -->
       The following are the 15 classes in Hard ImageNet</i>.
           <center><img src="./webpage_imgs/classes.png" width="85%"></center>
-    </ul>
+      Each image has an object segmentation. Also, all training images are ranked based on the strength of the spurious cues present. This allows for the selection of balanced subsets (i.e. where spurious correlations are broken). 
+      With our richly annotated dataset and benchmark, we hope the community can begin to consider new training and evaluation paradigms for faithful image classification under suboptimal data conditions; that is, predicting <i>for the right reasons</i>, even when our data is riddled with spurious cues. 
+        </ul>
     </div>
   </div>
 
@@ -405,7 +408,12 @@
         <h2 class="text-center">BENCHMARK</h2>
         <ul class="lead text-center">
           We present three families of metrics for assessing the spurious feature reliance of models performing Hard ImageNet classification. 
+          <li><b>Ablation</b>: removing the object from an image should result in lower accuracy, but when spurious features are relied upon, accuracy remains high after ablation. We ablate in multiple ways, and use accuracy drop as a proxy for how well a model attends to the object.</li>
+          <li><b>Relative Foreground Sensitivity</b>: the degree to which model performance drops due to corruption of a region proxies the model sensitivity to that region. We add noise in foregrounds and backgrounds, and compare accuracy drops in a normalized way to determine foreground sensitivity.</li>
+          <li><b>Saliency Alignment</b>: the intersection-over-union of GradCAM saliencies with object segmentations gives a notion of how well models recognize object regions as salient to classfication. </li>
         </ul>
+
+
     <div class="container-fluid text-center" onload="currentSlide2(1);">
 
       <!-- Full-width images with number text -->
