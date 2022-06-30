@@ -1,6 +1,6 @@
 # HardImageNet
 
-This is the repository for the Hard ImageNet dataset, associated with the NeurIPS 2022 Datasets and Benchmarks submission, <em>``Hard ImageNet: Segmentations for Objects with Strong Spurious Cues''</em>. Read more on our website mmoayeri.github.io/HardImageNet.
+This is the repository for the Hard ImageNet dataset, associated with the NeurIPS 2022 Datasets and Benchmarks submission, <em>``Hard ImageNet: Segmentations for Objects with Strong Spurious Cues''</em>. Read more on our [website](mmoayeri.github.io/HardImageNet).
 
 ## Download the dataset
 
