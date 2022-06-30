@@ -7,8 +7,8 @@ This is the repository for the Hard ImageNet dataset, associated with the NeurIP
 You can download the dataset directly from box by following this [link](https://umd.app.box.com/s/ca7qlcfsqlfqul9rzgtuqhb2c6pm62qd). 
 
 Alternatively, the dataset can be downloaded from the command line as follows:
-    curl -L 'https://app.box.com/index.php?rm=box_download_shared_file&shared_name=ca7qlcfsqlfqul9rzgtuqhb2c6pm62qd&file_id=f_972129165893' -o hardImageNet.zip
     
+    curl -L 'https://app.box.com/index.php?rm=box_download_shared_file&shared_name=ca7qlcfsqlfqul9rzgtuqhb2c6pm62qd&file_id=f_972129165893' -o hardImageNet.zip
     unzip hardImageNet.zip
     
 The dataset should contain directories for the train and validation splits (named `train' and 'val' respectively), as well as a pickle file containing the class-wise rankings of the strength of spurious cues present for each sample in the training set. 
@@ -23,6 +23,7 @@ We provide code for three evaluations using Hard ImageNet. To assess the degree 
 ## Citation
 
 If the dataset or code is of use to you, please consider citing:
+
     @misc{moayeri2022hard,
         title     = {Hard ImageNet: Segmentations for Objects with Strong Spurious Cues},
         author    = {Moayeri, Mazda and Singla, Sahil and Feizi, Soheil},
