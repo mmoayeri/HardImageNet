@@ -13,6 +13,12 @@ Alternatively, the dataset can be downloaded from the command line as follows:
     
 The dataset should contain directories for the train and validation splits (named `train' and 'val' respectively), as well as a pickle file containing the class-wise rankings of the strength of spurious cues present for each sample in the training set. 
 
+## Setting up the data
+
+Be sure to update lines 10 and 11 in datasets/hard_imagenet.py so that they point to the ImageNet path and the HardImageNet path in your files respectively. Then, you can simply instantiate a HardImageNet dataset object using the HardImageNet() constructor, after having included the line 'from datasets import *'. 
+
+Alternatively, you can use the function get_dset in utils.py. 
+
 ## Evaluate Models
 
 We provide code for three evaluations using Hard ImageNet. To assess the degree to which a model relies on spurious cues, you can:
