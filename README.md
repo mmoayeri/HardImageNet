@@ -26,6 +26,8 @@ We provide code for three evaluations using Hard ImageNet. To assess the degree 
 2. Noise the object and the background and compare performance using <em>Relative Foreground Sensitivity</em> metric. Code for this evaluation is in rfs.py
 3. Compute the alignment of saliency to the object region via intersection over union of GradCAM and object segmentation. Code for this evaluation is in saliency_analysis.py
 
+The file supplemental_model_eval.py shows how to evaluate pretrained models on our benchmark all in one file. 
+
 ## Citation
 
 If the dataset or code is of use to you, please consider citing:
