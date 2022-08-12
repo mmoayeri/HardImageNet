@@ -4,28 +4,27 @@ import os
 from datasets import *
 from torch.utils.data import DataLoader
 from tqdm import tqdm
-# from robustness.datasets import ImageNet
-# from robustness.model_utils import make_and_restore_model
 import argparse
 import timm
 from torchvision import transforms, models
 import random
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
-_FT_ROOT = '/scratch1/mmoayeri/models/finetuned2/' #finetune2 has the robust models w/o norm applied
-_IMAGENET_ROOT = '/scratch1/shared/datasets/ILSVRC2012/'
+_FT_ROOT = '/cmlscratch/mmoayeri/models/finetuned/' #finetune2 has the robust models w/o norm applied
+_IMAGENET_ROOT = '/fs/cml-datasets/ImageNet/ILSVRC2012/'
 _DEIT_ROOT = '/nfshomes/mmoayeri/.cache/torch/hub/facebookresearch_deit_main'
 
 class FineTuner(object):
     def __init__(self, mtype='torch_resnet50', dset_name='hard_imagenet', epochs=15,
-                sal_reg=False, rand_noise=False, balanced_subset=False): 
+                sal_reg=False, rand_noise=False, balanced_subset=False, bg_only=False): 
         self.mtype, self.dset_name = mtype, dset_name
         self.sal_reg, self.rand_noise, self.balanced_subset = sal_reg, rand_noise, balanced_subset
+        self.bg_only = bg_only
         self.init_loaders()
         self.init_model(mtype)
         self.optimizer = torch.optim.Adam(self.parameters, lr=0.0005, 
                                     betas=(0.9,0.999), weight_decay=0.0001)
-        ext = '_'.join([k for x,k in zip([True, sal_reg, rand_noise, balanced_subset], ['', 'SalReg', 'RandNoise', 'Balanced']) if x])
+        ext = '_'.join([k for x,k in zip([True, bg_only, sal_reg, rand_noise, balanced_subset], ['', 'BgOnly', 'SalReg', 'RandNoise', 'Balanced']) if x])
         self.save_path = os.path.join(_FT_ROOT, dset_name, f'{mtype}{ext}.pth')
         self.criterion = nn.CrossEntropyLoss()
         self.mse = nn.MSELoss()
@@ -52,87 +51,9 @@ class FineTuner(object):
             model.add_module('flatten', nn.Flatten())
             model.add_module('classifier', nn.Linear(in_features=in_ftrs, out_features=self.num_classes, bias=True))  
 
-        # elif self.mtype == 'simclr':
+        else:
+            raise ValueError(f"Specified model type {self.mtype} not recognized. Update finetuner.py to facilitate model loading.")
 
-        #     class SimCLRWrapper(nn.Module):
-        #         def __init__(self):
-        #             super(SimCLRWrapper, self).__init__()
-        #             from pl_bolts.models.self_supervised import SimCLR
-        #             weight_path = 'https://pl-bolts-weights.s3.us-east-2.amazonaws.com/simclr/bolts_simclr_imagenet/simclr_imagenet.ckpt'
-        #             simclr = SimCLR.load_from_checkpoint(weight_path, strict=False)
-        #             # simclr.freeze()
-        #             self.model = simclr.encoder
-        #             nftrs = self.model.fc.in_features
-        #             self.model.fc = nn.Linear(in_features=nftrs, out_features=self.num_classes, bias=True)
-        #             # print(self.model)
-                
-        #         def forward(self, x):
-        #             ftrs = self.model(x)[0]
-        #             logits = self.model.fc(ftrs)
-        #             return logits
-
-        #     # match our notation later
-        #     model = SimCLRWrapper()
-        #     model.feat_net = nn.Sequential(*list(model.model.children())[:-1])
-        #     model.classifier = model.model.fc
-        #     self.gradcam_layer = model.model.layer4[-1]
-
-        # elif 'clip' in mtype:
-        #     assert ('ViT' in mtype or 'RN' in mtype), 'CLIP is only supported on ViT-B/16, ViT-B/32, RN50'
-        #     import clip
-        #     clip_mtype = mtype.split('clip_')[-1]
-        #     if 'ViT' in clip_mtype:
-        #         clip_mtype = 'ViT-B/'+clip_mtype[-2:]
-
-        #     class CLIPWrapper(nn.Module):
-        #         def __init__(self, mtype):
-        #             super(CLIPWrapper, self).__init__()
-        #             self.feat_net, self.preprocess = clip.load(mtype, device='cuda')
-        #             in_ftrs = self.feat_net.encode_image(torch.rand(5,3,224,224).cuda()).shape[1]
-        #             # in_ftrs =  512 if 'ViT' in mtype else 1024
-        #             self.classifier = nn.Linear(in_features=in_ftrs, out_features=10, bias=True)
-
-        #         def forward(self, x):
-        #             # img_ftrs = self.feat_net.encode_image(self.preprocess(x))
-        #             img_ftrs = self.feat_net.encode_image(x).float()
-        #             logits = self.classifier(img_ftrs)
-        #             return logits
-
-        #     model = CLIPWrapper(clip_mtype)
-        #     if 'ViT' in clip_mtype:
-        #         self.gradcam_layer = model.feat_net.visual.transformer.resblocks[-1].ln_1
-        #     elif 'RN' in clip_mtype:
-        #         self.gradcam_layer = model.feat_net.visual.layer4[-1]
-
-        # elif 'robust' in self.mtype:
-        #     if 'eps' in self.mtype:
-        #         eps = self.mtype.split('eps')[-1]
-        #     else:
-        #         eps = 3
-        #     # arch = 'resnet50' if '50' in self.mtype else 'resnet18'
-        #     ds_ = ImageNet(_IMAGENET_ROOT)
-        #     mkey = self.mtype[len('robust_'):]
-        #     if 'resnet' in mkey and 'wide' not in mkey:
-        #         arch = mkey.split('_')[0]
-        #         add_custom_forward=False
-        #     else:
-        #         arch = get_arch(mkey[:mkey.index('_l2')])
-        #         add_custom_forward=True
-        #     add_custom_forward = False if 'wide' in mkey else add_custom_forward
-        #     # arch = models.wide_resnet50_2() if 'wide' in self.mtype else self.mtype.split('_')[1]
-        #     checkpoint_fp = "/cmlscratch/mmoayeri/dcr_models/pretrained-robust/{}.ckpt".format(mkey)
-        #     model, _ = make_and_restore_model(arch=arch, dataset=ds_,
-        #                 resume_path=checkpoint_fp, add_custom_forward=add_custom_forward)
-        #     self.gradcam_layer = model.model.layer4[-1] if 'resnet' in mkey else None
-        #     feat_net = nn.Sequential(*list(model.model.model.children())[:-1])
-        #     model = nn.Sequential()
-        #     model.add_module('feat_net', feat_net)
-        #     out = model(torch.zeros(5,3,224,224).to(device))
-        #     model.add_module('flatten', nn.Flatten())
-        #     inftrs = model(torch.zeros(5,3,224,224).to(device)).shape[1]
-        #     classifier = nn.Linear(in_features=inftrs, out_features=10, bias=True)
-        #     model.add_module('classifier', classifier)
-            
         parameters = list(model.classifier.parameters())
         for param in model.feat_net.parameters():
             param.requires_grad = False
@@ -184,6 +105,9 @@ class FineTuner(object):
                 noise = torch.randn_like(x) * (1-mask) * 0.25
                 x = torch.clamp(x + noise, 0, 1)
             
+            if self.bg_only:
+                x = 0.5*torch.ones_like(x) * mask + x * (1-mask)
+
             x = self.normalize(x)
             if self.sal_reg:
                 x.requires_grad_()
@@ -237,10 +161,10 @@ class FineTuner(object):
             param.requires_grad = True
 
 if __name__ == '__main__':  
-    for sal_reg, rand_noise, balanced in [[True, True, False], [False, False, True], [True, True, True], [False, False, False]]:
-        for mtype in ['timm_deit_small_patch16_224', 'torch_resnet50']:
-            # for dset_name in ['rival10', 'rival20', 'hard_imagenet']:
-            for dset_name in ['hard_imagenet']:
-                ft = FineTuner(mtype=mtype, dset_name=dset_name,
-                        sal_reg=sal_reg, rand_noise=rand_noise, balanced_subset=balanced)
-                ft.finetune()
+    # for sal_reg, rand_noise, balanced in [[True, True, False], [False, False, True], [True, True, True], [False, False, False]]:
+    for mtype in ['timm_deit_small_patch16_224', 'torch_resnet50']:
+        for dset_name in ['hard_imagenet', 'rival10', 'rival20']:
+            ft = FineTuner(mtype=mtype, dset_name=dset_name, bg_only=True)
+            # ft = FineTuner(mtype=mtype, dset_name=dset_name,
+            #         sal_reg=sal_reg, rand_noise=rand_noise, balanced_subset=balanced)
+            ft.finetune()

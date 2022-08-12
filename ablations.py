@@ -55,14 +55,11 @@ def fill_instance_avg_surrounding_color(img, mask, bbox, keep_shape=False):
     num_non_obj_pixels_in_box = num_nonzero_pixels(img_in_box) - num_nonzero_pixels(mask_in_box)
 
     sum_non_obj_pixels_in_box = img_in_box.flatten(1).sum(-1) - object_in_box.flatten(1).sum(-1)
-    # print(sum_non_obj_pixels_in_box, num_non_obj_pixels_in_box)
     avg_color = sum_non_obj_pixels_in_box / num_non_obj_pixels_in_box * 3 # per color channel
-    # print(avg_color)
     if keep_shape:
         obj_filled_in = torch.stack([mask_in_box[0]*avg_color[i] for i in range(avg_color.shape[0])])
         out = img * (1-mask_in_box) + obj_filled_in
     else:
-        # box_filled_in = torch.tensor(np.stack([torch.tensor(bbox)*avg_color[i] for i in range(avg_color.shape[0])]))
         box_filled_in = torch.tensor(np.stack([bbox*float(avg_color[i]) for i in range(avg_color.shape[0])]))
         out = img * (1-bbox) + box_filled_in
     return out
@@ -74,7 +71,6 @@ def fill_with_avg_surrounding_color(img, mask, keep_shape=False):
         instance_labels = label.copy()
         instance_labels[instance_labels != i] = 0
         bbox = get_bbox(instance_labels)[0]
-        # print(bbox.sum())
         if bbox.sum() < 100:
             continue
         img = fill_instance_avg_surrounding_color(img, mask, bbox, keep_shape)
@@ -84,11 +80,9 @@ def trim_tile(img, mask, x1, x2, y1, y2, dir):
     _, h, w = img.shape
     x1, y1 = [max(a,0) for a in [x1, y1]]
     x2, y2 = [min(a,d) for a,d in zip([x2, y2], [h,w])]
-    # print(mask[:, y1:y2, x1:x2].sum(), dir)
     if mask[:, y1:y2, x1:x2].sum() == 0:
         out = img[:, y1:y2, x1:x2]
         size = (x2-x1) * (y2-y1) 
-        # print('yer', out.shape, size)
     else:
         # find first instance of other object
         if dir == 'left':
@@ -125,20 +119,17 @@ def trim_tile(img, mask, x1, x2, y1, y2, dir):
 def repeat_tile_to_fill_bbox(tile, bbox_w, bbox_h, dir):
     out = torch.zeros(3, bbox_h, bbox_w)
 
-    # print()
     _, tile_h, tile_w = tile.shape
     if dir == 'right':
         num_tile_copies = bbox_w // tile_w
         for i in range(num_tile_copies):
             out[:, :, i*tile_w:min(bbox_w, (i+1)*tile_w)] = tile
-        # print(bbox_w, tile_w, bbox_w % tile_w, tile_w*num_tile_copies)
         if bbox_w % tile_w != 0:
             out[:, :, (tile_w*num_tile_copies):] = tile[:,:,:(bbox_w % tile_w)]
     elif dir == 'left':
         num_tile_copies = bbox_w // tile_w
         for i in range(num_tile_copies):
             out[:, :, max(0, bbox_w-(i+1)*tile_w):(bbox_w-i*tile_w)] = tile
-        # out[:, :, :(-1*tile_w*num_tile_copies)] = tile[:,:,(-1*bbox_w % tile_w):]
         if bbox_w % tile_w != 0:
             out[:, :, :(bbox_w % tile_w)] = tile[:,:,-1*(bbox_w % tile_w):]
     if dir == 'up':
@@ -161,9 +152,7 @@ def largest_adjacent_tile(img, mask, bbox):
     Each adjacent tile is cut off either at the image boundary or if there is another
     instance of the object (identified via mask). We then return the largest tile.
     '''
-    # print('hello')
     x_min, x_max, y_min, y_max = get_corners(bbox)
-    # print(x_min, x_max, y_min, y_max)
     right_tile, size_r = trim_tile(img, mask, x_max, 2*x_max-x_min, y_min, y_max, dir='right')
     left_tile, size_l = trim_tile(img, mask, 2*x_min-x_max, x_min, y_min, y_max, dir='left')
     up_tile, size_u = trim_tile(img, mask, x_min, x_max, y_max, 2*y_max-y_min, dir='up')
@@ -177,32 +166,6 @@ def largest_adjacent_tile(img, mask, bbox):
     # print(dirs[max_size_ind])
     return out
 
-# def tile(img, mask):
-#     # for each contiguous block
-#     arr = mask[0].numpy(0)
-#     label, num_features = scipy.ndimage.label(arr)
-
-#     for i in range(num_features):
-#         on_pixels = np.where(arr != 0)
-#         x_max, y_max = [np.max(on_pixels[i]) for i in [0,1]]
-#         x_min, y_min = [np.min(on_pixels[i]) for i in [0,1]]
-
-#         _,h,w = mask.shape
-
-#         direction_most_space = np.argmax([y_min, h-x_max, w-y_max, x_min]) # like north, east, south, west
-#         if direction_most_space == 0:
-#             tile = img[x_min:x_max, :y_min]
-#         if direction_most_space == 0:
-#             tile = img[x_min:x_max, :y_min]
-#         elif direction_most_space == 1:
-#             tile = img[x_max:, y_min:y_max]
-#         elif direction_most_space == 1:
-#             tile = img[:x_min, y_min:y_max]
-#         else:
-#             tile = img[x_min:x_max, y_max:]
-
-#     gray = torch.ones_like(mask) * 0.5
-#     return img * (1-mask) + gray * mask
 
 def tile(img, mask):
     labels, num_features = scipy.ndimage.label(mask[0, 0])
@@ -214,108 +177,53 @@ def tile(img, mask):
             if bbox.sum() > 0:
                 tile = largest_adjacent_tile(img[0], mask[0], bbox)
                 x_min, x_max, y_min, y_max = get_corners(bbox)
-                # print(tile.shape)
                 img[:, :, x_min:x_max, y_min:y_max] = tile.swapaxes(1,2)
     return img
 
 #### EVALUATION
 
-def eval_under_ablation(model, ablation, dset, bs=32):
+def eval_under_ablation(model, ablation, dset, bs=32, shuffle=True):
     model = model.eval().cuda()
-    loader = torch.utils.data.DataLoader(dset, batch_size=bs, shuffle=True, num_workers=8, pin_memory=True)
+    loader = torch.utils.data.DataLoader(dset, batch_size=bs, shuffle=shuffle, num_workers=8, pin_memory=True)
     normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 
     cc, ctr = 0, 0
+    true_class_confidences = []
     for img, mask, label in tqdm(loader):
         ablated_img = ablation(img, mask)
         ablated_img, label = [x.cuda() for x in [ablated_img, label]]
         ablated_img = normalize(ablated_img).float()
-        cc += (model(ablated_img).argmax(1) == label).sum() 
+        logits = model(ablated_img)
+        cc += (logits.argmax(1) == label).sum() 
         ctr += img.shape[0] if bs > 1 else 1
 
-    return (cc/ctr).item()
+        probs = torch.softmax(logits, 1)
+        true_class_confidences.extend(probs[:,label].flatten().detach().cpu().tolist())
 
-# dset = HardImageNet()
-
-# to_pil = transforms.ToPILImage()
-# for i in range(100):
-# # # i=7
-# #     print(i)
-#     x,m,y = dset[i]
-#     labels, num_features = scipy.ndimage.label(m[0])
-#     for j in range(1,1+num_features):
-#         labels2 = labels.copy()
-#         labels2[labels2 != j] = 0
-#         if labels2.sum() > 0:
-#             print(labels2.sum())
-#             bbox = get_bbox(labels2)
-#             if bbox.sum() >0:
-#                 tile = largest_adjacent_tile(x, m, bbox)
-#                 x_min, x_max, y_min, y_max = get_corners(bbox)
-#                 # print(tile.shape)
-#                 x[:, x_min:x_max, y_min:y_max] = tile.swapaxes(1,2)
-#     to_pil(x).save(f'tests/{i}.png')
-
-# to_pil(x).save('test.png')
-# to_pil(x*m).save('test2.png')
-
-# labels, num_features = scipy.ndimage.label(m[0])
-# # for i in range(1, num_features+1):
-# labels2 = labels.copy()
-# labels2[labels2 != 1] = 0
-# bbox = get_bbox(labels2)
-# bbox_tens = torch.tensor(np.stack([bbox,bbox,bbox])).float()
-# to_pil(bbox_tens).save('test4.png')
-# # to_pil(x * torch.tensor(bbox).float()).save('test3.png')
-# to_pil(x * bbox_tens).save('test3.png')
-# tile = largest_adjacent_tile(x, m, bbox)
-# print(tile.shape)
-# to_pil(tile).save('test4.png')
+    return (cc/ctr).item(), true_class_confidences
 
 
-# transforms.ToPILImage()(fill_with_avg_surrounding_color(x,m)).save(f'tests/{i}.png')
 
-
-# identity = lambda x,y: x
-# net = models.resnet50(pretrained=True)
-# from finetuner import FineTuner
-# ft = FineTuner(); ft.restore_model(); net = ft.model
-# dset = HardImageNet(ft=True)
-
-# print(eval_under_ablation(net, fill_with_avg_surrounding_color, dset, bs=1))
-# print(eval_under_ablation(net, tile, dset, bs=1))
-# print(eval_under_ablation(net, replace_with_gray, dset))
-# print(eval_under_ablation(net, replace_with_gray, dset))
-# print(eval_under_ablation(net, identity, dset))
-
-# dset2 = RIVAL10()
-# ft = FineTuner(dset_name='rival10'); ft.restore_model(); net = ft.model
-# dset2 = RIVAL10(ft=True)
-# print(eval_under_ablation(net, fill_with_avg_surrounding_color, dset2, bs=1))
-# print(eval_under_ablation(net, replace_with_gray, dset2))
-# print(eval_under_ablation(net, replace_with_gray, dset2))
-# print(eval_under_ablation(net, tile, dset2, bs=1))
-# print(eval_under_ablation(net, identity, dset2))
-
-def compute_ablated_acc():
-    ablations = [('tile', tile, 1), ('replace_with_gray', replace_with_gray, 32), ('replace_bbox_with_gray', lambda x,y: replace_with_gray(x,y,False), 32), ('none', lambda x,y: x, 32)]
+def compute_ablated_accs():
+    ablations = [('tile', tile, 1), ('replace_with_gray', replace_with_gray, 1), ('replace_bbox_with_gray', lambda x,y: replace_with_gray(x,y,False), 1), ('none', lambda x,y: x, 1)]
     results = load_cached_results('ablations')
+    results_confs = load_cached_results('ablation_confidences')
     for ab_name, ab, bs in ablations:
-        if ab_name not in results:
-            results[ab_name] = dict()
+        if ab_name not in results_confs:
+            results_confs[ab_name] = dict()
         for ft in [True, False]:
-            if ft not in results[ab_name]:
-                results[ab_name][ft] = dict()
+            if ft not in results_confs[ab_name]:
+                results_confs[ab_name][ft] = dict()
             for mkey in ['torch_resnet50', 'timm_deit_small_patch16_224']:
-                if mkey not in results[ab_name][ft]:
-                    results[ab_name][ft][mkey] = dict()
+                if mkey not in results_confs[ab_name][ft]:
+                    results_confs[ab_name][ft][mkey] = dict()
                 if not ft:
                     if mkey == 'torch_resnet50':
                         model = models.resnet50(pretrained=True).eval().cuda()
                     elif mkey == 'timm_deit_small_patch16_224':
                         model = timm.create_model(mkey[len('timm_'):], pretrained=True).eval().cuda()
                 for dset_name in ['rival10', 'rival20', 'hard_imagenet']:
-                    if dset_name not in results[ab_name][ft][mkey]:
+                    if dset_name not in results_confs[ab_name][ft][mkey]:
                         if ft:
                             finetuner = FineTuner(dset_name=dset_name, mtype=mkey); finetuner.restore_model()
                             model = finetuner.model
@@ -325,9 +233,15 @@ def compute_ablated_acc():
                             dset = RIVAL10(ft=ft)
                         if dset_name == 'rival20':
                             dset = RIVAL10(ft=ft, twenty=True)
-                        acc = eval_under_ablation(model, ab, dset, bs)
+                        acc, confs = eval_under_ablation(model, ab, dset, bs)
                         results[ab_name][ft][mkey][dset_name] = acc
                         cache_results('ablations', results)
-                    print('Ablation: {:<10}, Finetuned: {:<8}, Model: {:<30}, Dset: {:<20}, Acc: {:.3f}'.format(
-                        ab_name, ft, mkey, dset_name, results[ab_name][ft][mkey][dset_name]*100
+                        results_confs[ab_name][ft][mkey][dset_name] = confs
+                        cache_results('ablation_confidences', results_confs)
+                    print('Ablation: {:<10}, Finetuned: {:<8}, Model: {:<30}, Dset: {:<20}, Acc: {:.3f}, Avg Conf: {:.3f}'.format(
+                        ab_name, ft, mkey, dset_name, results[ab_name][ft][mkey][dset_name]*100,
+                        np.average(results_confs[ab_name][ft][mkey][dset_name])*100
                     ))
+
+if __name__ =='__main__':
+    compute_ablated_accs()
