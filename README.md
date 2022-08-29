@@ -13,6 +13,8 @@ Alternatively, the dataset can be downloaded from the command line as follows:
     
 The dataset should contain directories for the train and validation splits (named `train' and 'val' respectively), as well as a pickle file containing the class-wise rankings of the strength of spurious cues present for each sample in the training set. 
 
+Note that we assume the researcher has access to ImageNet; the files above only contain the additional annotations (segmentation masks) we collected. If you do not have access to ImageNet, you can either download the enitre dataset from [HuggingFace](https://huggingface.co/datasets/imagenet-1k), or alternatively, you can download only the images corresponding to the classes annotated in Hard ImageNet. To do so, follow this [link to download from box](https://umd.box.com/s/gx5qx4w03dgsumjclo7wpbdqov4xxrly). 
+
 ## Setting up the data
 
 Be sure to update lines 10 and 11 in datasets/hard_imagenet.py so that they point to the ImageNet path and the HardImageNet path in your files respectively. Then, you can simply instantiate a HardImageNet dataset object using the HardImageNet() constructor, after having included the line 'from datasets import *'. 
