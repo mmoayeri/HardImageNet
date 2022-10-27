@@ -6,15 +6,15 @@ import pickle
 import os
 from PIL import Image
 from augmentations import *
+from hard_imagenet import _MASK_ROOT, _IMAGENET_ROOT
 
-_IMAGENET_ROOT = '/scratch1/shared/datasets/ILSVRC2012/'
 _ROOT = '/scratch1/mmoayeri/data/RIVAL10/'
 
-with open('/scratch1/mmoayeri/hard_imagenet/data_collection/meta/idx_to_wnid.pkl', 'rb') as f:
+with open(_MASK_ROOT+'meta/idx_to_wnid.pkl', 'rb') as f:
     idx_to_wnid = pickle.load(f)
 wnid_to_idx = dict({v:k for k,v in idx_to_wnid.items()})
 
-with open('/scratch1/mmoayeri/hard_imagenet/data_collection/meta/wnid_to_rival10_id.pkl', 'rb') as f:
+with open(_MASK_ROOT+'meta/wnid_to_rival10_id.pkl', 'rb') as f:
     wnid_to_rival10_id = pickle.load(f)
 
 class RIVAL10(Dataset):

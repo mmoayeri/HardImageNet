@@ -25,6 +25,21 @@ def vit_reshape_transform(tensor, height=14, width=14):
     result = result.transpose(2, 3).transpose(1, 2)
     return result
 
+def clip_vit_reshape_transform(tensor, height=14, width=14):
+    result = tensor[1 :  , :].reshape(tensor.size(1),
+        height, width, tensor.size(2))
+    result = result.transpose(2, 3).transpose(1, 2).float()
+    return result
+
+def swin_reshape_transform(tensor, height=7, width=7):
+    result = tensor.reshape(tensor.size(0),
+        height, width, tensor.size(2))
+
+    # Bring the channels to the first dimension,
+    # like in CNNs.
+    result = result.transpose(2, 3).transpose(1, 2)
+    return result
+
 def get_cam_obj(model, target_layer, mtype, camtype='gradcam'):
     if 'clip_ViT' in mtype:
         if '32' in mtype:
@@ -32,10 +47,12 @@ def get_cam_obj(model, target_layer, mtype, camtype='gradcam'):
         else:
             reshape_transform = lambda x : clip_vit_reshape_transform(x, height=14, width=14)
 
-        # reshape_transform = lambda x : clip_vit_reshape_transform(x, b32=('32' in mtype))
     elif 'clip_RN' in mtype:
         reshape_transform = lambda x : x.float()
+    elif 'swin' in mtype:
+        reshape_transform = swin_reshape_transform
     elif 'deit' in mtype or 'vit' in mtype:
+    # if use_vit_transform:
         reshape_transform = vit_reshape_transform
     else:
         reshape_transform = lambda x : x

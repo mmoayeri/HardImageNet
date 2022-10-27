@@ -10,10 +10,10 @@ from augmentations import *
 _IMAGENET_ROOT = '/scratch1/shared/datasets/ILSVRC2012/'
 _MASK_ROOT = '/scratch1/mmoayeri/data/hardImageNet/'
 
-with open('/scratch1/mmoayeri/hard_imagenet/data_collection/meta/idx_to_wnid.pkl', 'rb') as f:
+with open(_MASK_ROOT+'meta/idx_to_wnid.pkl', 'rb') as f:
     idx_to_wnid = pickle.load(f)
 wnid_to_idx = dict({v:k for k,v in idx_to_wnid.items()})
-with open('/scratch1/mmoayeri/hard_imagenet/data_collection/meta/hard_imagenet_idx.pkl', 'rb') as f:
+with open(_MASK_ROOT+'meta/hard_imagenet_idx.pkl', 'rb') as f:
     inet_idx = pickle.load(f)
 
 class HardImageNet(Dataset):
